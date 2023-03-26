@@ -13,7 +13,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/food_image"
+            android:id="@+id/food_img"
             android:scaleType="centerCrop"
             android:src="@drawable/background"
             android:layout_width="match_parent"

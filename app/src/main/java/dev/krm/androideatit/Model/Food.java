@@ -5,14 +5,15 @@ public class Food {
 
     public Food(){}
 
-    public Food(String name, String image, String description, String price, String discount, String menuId) {
+    public Food(String name, String img, String description, String price, String discount, String menuId) {
         Name = name;
-        Image = image;
+        Image = img;
         Description = description;
         Price = price;
         Discount = discount;
         MenuId = menuId;
     }
+
 
     public String getName() {
         return Name;
