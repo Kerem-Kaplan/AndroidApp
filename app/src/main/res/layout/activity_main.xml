@@ -34,6 +34,7 @@
        android:weightSum="2"
        android:layout_width="match_parent"
        android:layout_height="wrap_content">
+
        <Button
            android:id="@+id/btnSignUp"
            android:text="Sıgn Up"
@@ -46,8 +47,8 @@
            app:shadowColor="@android:color/black"
            app:shadowEnabled="true"
            app:shadowHeight="5dp"
-           app:cornerRadius="4dp"
-           ></Button>
+           app:cornerRadius="4dp" />
+
        <Button
            android:id="@+id/btnSignIn"
            android:text="Sıgn In"
@@ -60,7 +61,6 @@
            app:shadowColor="@android:color/black"
            app:shadowEnabled="true"
            app:shadowHeight="5dp"
-           app:cornerRadius="4dp"
-           ></Button>
+           app:cornerRadius="4dp" />
    </LinearLayout>
 </RelativeLayout>
