@@ -1,8 +1,10 @@
 package dev.krm.androideatit;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -72,6 +74,25 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 }
         });
 
+        binding.appBarHome.fabOrders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent orderIntent = new Intent(Home.this, OrderStatus.class);
+                startActivity(orderIntent);
+            }
+        });
+
+        binding.appBarHome.fabLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent signIn = new Intent(Home.this, SignIn.class);
+                signIn.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(signIn);
+            }
+        });
+
+
+
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         // Passing each menu ID as a set of Ids because each
@@ -92,6 +113,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         recycler_menu.setHasFixedSize(true);
         layoutManager=new LinearLayoutManager(this);
         recycler_menu.setLayoutManager(layoutManager);
+
+
+
+
 
         loadMenu();
     }
@@ -120,38 +145,46 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         recycler_menu.setAdapter(adapter);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item){
-        int id=item.getItemId();
-        
-        if(id==R.id.nav_menu){
-            
-        }else if(id==R.id.nav_cart){
-            Intent cartIntent=new Intent(Home.this,Cart.class);
-            startActivity(cartIntent);
-            
-        } else if (id==R.id.nav_orders) {
-            Intent orderIntent=new Intent(Home.this,OrderStatus.class);
-            startActivity(orderIntent);
-            
-        } else if (id==R.id.nav_log_out) {
-            Intent signIn=new Intent(Home.this,SignIn.class);
-            signIn.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(signIn);
-        }
-
-        DrawerLayout drawer=(DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home, menu);
+        MenuInflater inflater= getMenuInflater();
+        inflater.inflate(R.menu.activity_main_drawer, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_menu:
+                break;
+            case R.id.nav_cart:
+                Intent cartIntent = new Intent(Home.this, Cart.class);
+                startActivity(cartIntent);
+
+                break;
+            case R.id.nav_orders:
+                Intent orderIntent = new Intent(Home.this, OrderStatus.class);
+                startActivity(orderIntent);
+
+                break;
+            case R.id.nav_log_out:
+                Intent signIn = new Intent(Home.this, SignIn.class);
+                signIn.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(signIn);
+                break;
+        }
+
+        DrawerLayout drawer=(DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return super.onOptionsItemSelected(item);
     }
 
     /*@Override

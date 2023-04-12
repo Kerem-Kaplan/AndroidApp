@@ -1,30 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <group android:checkableBehavior="single">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
         <item
             android:id="@+id/nav_menu"
             android:icon="@drawable/baseline_restaurant_24"
             android:iconTint="@android:color/white"
-            android:title="Menu" />
+            android:title="Menu"
+            />
 
         <item
             android:id="@+id/nav_cart"
             android:icon="@drawable/baseline_shopping_cart_24"
             android:iconTint="@android:color/white"
-            android:title="Cart" />
+            android:title="Cart"/>
         <item
             android:id="@+id/nav_orders"
             android:icon="@drawable/baseline_access_time_24"
             android:iconTint="@android:color/white"
-            android:title="Orders" />
+            android:title="Orders"/>
 
         <item
             android:id="@+id/nav_log_out"
             android:icon="@drawable/baseline_logout_24"
             android:iconTint="@android:color/white"
-            android:title="Log Out" />
+            android:title="Log Out"/>
 
-
-    </group>
 </menu>

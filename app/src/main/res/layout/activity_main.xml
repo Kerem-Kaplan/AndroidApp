@@ -38,6 +38,7 @@
        <Button
            android:id="@+id/btnSignUp"
            android:text="Sıgn Up"
+           android:textColor="@android:color/white"
            android:layout_weight="1"
            android:layout_width="0dp"
            android:layout_height="wrap_content"
@@ -51,7 +52,8 @@
 
        <Button
            android:id="@+id/btnSignIn"
-           android:text="Sıgn In"
+           android:text="Sign In"
+           android:textColor="@android:color/white"
            android:layout_weight="1"
            android:layout_width="0dp"
            android:layout_height="wrap_content"

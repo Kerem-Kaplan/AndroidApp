@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +31,7 @@ public class FoodDetail extends AppCompatActivity {
     ImageView food_image;
     CollapsingToolbarLayout collapsingToolbarLayout;
     FloatingActionButton btnCart;
+    ElegantNumberButton numberButton;
 
     String foodId="";
 
@@ -48,14 +50,14 @@ public class FoodDetail extends AppCompatActivity {
         foods=database.getReference("Foods");
 
         btnCart=(FloatingActionButton) findViewById(R.id.btnCart);
-
+        numberButton=(ElegantNumberButton) findViewById(R.id.number_button);
         btnCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new Database(getBaseContext()).addToCart(new Order(
                         foodId,
                         currentFood.getName(),
-                        "1",
+                        numberButton.getNumber(),
                         currentFood.getPrice(),
                         currentFood.getDiscount()
                 ));
