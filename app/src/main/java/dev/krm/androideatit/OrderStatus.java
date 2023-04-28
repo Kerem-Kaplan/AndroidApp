@@ -50,7 +50,7 @@ public class OrderStatus extends AppCompatActivity {
             @Override
             protected void populateViewHolder(OrderViewHolder orderViewHolder, Request request, int position) {
                 orderViewHolder.txtOrderId.setText(adapter.getRef(position).getKey());
-                orderViewHolder.txtOrderStatus.setText(convertCodeToStatus(request.getStatus()));
+                orderViewHolder.txtOrderStatus.setText(Common.convertCodeToStatus(request.getStatus()));
                 orderViewHolder.txtOrderAddress.setText(request.getAddress());
                 orderViewHolder.txtOrderPhone.setText(request.getPhone());
             }
@@ -58,13 +58,6 @@ public class OrderStatus extends AppCompatActivity {
         };
         recyclerView.setAdapter(adapter);
     }
-    private String convertCodeToStatus(String status) {
-        if(status.equals("0"))
-            return "placed";
-        else if(status.equals("1"))
-            return "On my way";
-        else
-            return "Shipped";
-    }
+
 
 }

@@ -36,7 +36,7 @@
        android:layout_height="wrap_content">
 
        <Button
-           android:id="@+id/btnSignUp"
+           android:id="@+id/btnMainSignUp"
            android:text="Sıgn Up"
            android:textColor="@android:color/white"
            android:layout_weight="1"
@@ -51,7 +51,7 @@
            app:cornerRadius="4dp" />
 
        <Button
-           android:id="@+id/btnSignIn"
+           android:id="@+id/btnMainSignIn"
            android:text="Sign In"
            android:textColor="@android:color/white"
            android:layout_weight="1"

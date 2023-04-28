@@ -35,6 +35,7 @@ import org.w3c.dom.Text;
 import dev.krm.androideatit.Common.Common;
 import dev.krm.androideatit.Interface.ItemClickListener;
 import dev.krm.androideatit.Model.Category;
+import dev.krm.androideatit.Service.ListenOrder;
 import dev.krm.androideatit.ViewHolder.MenuViewHolder;
 import dev.krm.androideatit.databinding.ActivityHomeBinding;
 
@@ -46,6 +47,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     FirebaseDatabase database;
     DatabaseReference category;
 
+    DrawerLayout drawer;
 
     TextView txtFullName;
     RecyclerView recycler_menu;
@@ -93,7 +95,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
 
 
-        DrawerLayout drawer = binding.drawerLayout;
+         drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -101,9 +103,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
                 .setOpenableLayout(drawer)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_view);
+        /*NavController navController = Navigation.findNavController(this, R.id.nav_view);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
+        NavigationUI.setupWithNavController(navigationView, navController);*/
 
         View headerView=navigationView.getHeaderView(0);
         txtFullName=(TextView) headerView.findViewById(R.id.txtFullName);
@@ -114,11 +116,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         layoutManager=new LinearLayoutManager(this);
         recycler_menu.setLayoutManager(layoutManager);
 
-
-
-
-
         loadMenu();
+
+        Intent service=new Intent(Home.this, ListenOrder.class);
+        startService(service);
     }
 
     private void loadMenu() {
@@ -187,10 +188,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+    /*@Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_view);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
-    }
+    }*/
+
+
 }
