@@ -23,6 +23,17 @@
     <include layout="@layout/content_home" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabLogOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@android:color/white"
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/baseline_logout_24" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,8 +41,9 @@
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="80dp"
         android:backgroundTint="@android:color/white"
-        app:srcCompat="@drawable/baseline_shopping_cart_24"
-        android:contentDescription="@null" />
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/baseline_shopping_cart_24" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabMenu"
         android:layout_width="wrap_content"
@@ -40,8 +52,8 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="144dp"
         android:backgroundTint="@android:color/white"
-        app:srcCompat="@drawable/baseline_restaurant_24"
-        android:contentDescription="@null" />
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/baseline_restaurant_24" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabOrders"
@@ -51,18 +63,19 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="208dp"
         android:backgroundTint="@android:color/white"
-        app:srcCompat="@drawable/baseline_access_time_24"
-        android:contentDescription="@null" />
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/baseline_access_time_24" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabLogOut"
+        android:id="@+id/refresh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="272dp"
         android:backgroundTint="@android:color/white"
-        app:srcCompat="@drawable/baseline_logout_24"
-        android:contentDescription="@null" />
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/baseline_refresh_24" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

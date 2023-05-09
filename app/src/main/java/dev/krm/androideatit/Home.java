@@ -1,9 +1,7 @@
 package dev.krm.androideatit;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,8 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -21,16 +17,13 @@ import com.squareup.picasso.Picasso;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
+
 
 import dev.krm.androideatit.Common.Common;
 import dev.krm.androideatit.Interface.ItemClickListener;
@@ -93,6 +86,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             }
         });
 
+        binding.appBarHome.refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadMenu();
+            }
+        });
+
 
 
          drawer = binding.drawerLayout;
@@ -116,7 +116,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         layoutManager=new LinearLayoutManager(this);
         recycler_menu.setLayoutManager(layoutManager);
 
-        loadMenu();
+        if(Common.isConnectedToInternet(this))
+            loadMenu();
+        else{
+            Toast.makeText(this, "Please check your connection", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         Intent service=new Intent(Home.this, ListenOrder.class);
         startService(service);
@@ -157,6 +162,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId()==R.id.refresh)
+            loadMenu();
         return super.onOptionsItemSelected(item);
     }
 

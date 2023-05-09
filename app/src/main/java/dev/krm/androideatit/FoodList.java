@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import dev.krm.androideatit.Common.Common;
 import dev.krm.androideatit.Interface.ItemClickListener;
 import dev.krm.androideatit.Model.Food;
 import dev.krm.androideatit.ViewHolder.FoodViewHolder;
@@ -68,10 +69,21 @@ public class FoodList extends AppCompatActivity {
         }
         if(!categoryId.isEmpty()){
             if(categoryId.startsWith("0")){
-                String realCatefogyId=categoryId.substring(1,2);
-                loadListFood(realCatefogyId);
+                String realCategoryId=categoryId.substring(1,2);
+                if(Common.isConnectedToInternet(getBaseContext()))
+                    loadListFood(realCategoryId);
+                else{
+                    Toast.makeText(FoodList.this, "Please check your connection", Toast.LENGTH_SHORT).show();
+                    return;
+                }
             }else{
-                loadListFood(categoryId);
+                if(Common.isConnectedToInternet(getBaseContext()))
+                    loadListFood(categoryId);
+                else{
+                    Toast.makeText(FoodList.this, "Please check your connection", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
             }
 
         }
@@ -129,7 +141,7 @@ public class FoodList extends AppCompatActivity {
                 Food.class,
                 R.layout.food_item,
                 FoodViewHolder.class,
-                foodList.orderByChild("Name").equalTo(text.toString())
+                foodList.orderByChild("name").equalTo(text.toString())
         ) {
             @Override
             protected void populateViewHolder(FoodViewHolder foodViewHolder, Food food, int i) {
@@ -142,7 +154,7 @@ public class FoodList extends AppCompatActivity {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
                         Intent foodDetail=new Intent(FoodList.this,FoodDetail.class);
-                        foodDetail.putExtra("FoodId",searchAdapter.getRef(position).getKey());
+                        foodDetail.putExtra("foodId",searchAdapter.getRef(position).getKey());
                         startActivity(foodDetail);
                     }
                 });
@@ -154,7 +166,7 @@ public class FoodList extends AppCompatActivity {
     }
 
     private void loadSuggest() {
-        foodList.orderByChild("MenuId").equalTo(categoryId)
+        foodList.orderByChild("menuId").equalTo(categoryId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -176,7 +188,7 @@ public class FoodList extends AppCompatActivity {
         adapter=new FirebaseRecyclerAdapter<Food, FoodViewHolder>(Food.class,
                 R.layout.food_item,
                 FoodViewHolder.class,
-                foodList.orderByChild("MenuId").equalTo(categoryId)
+                foodList.orderByChild("menuId").equalTo(categoryId)
                 ) {
             @Override
             protected void populateViewHolder(FoodViewHolder foodViewHolder, Food food, int i) {
@@ -189,7 +201,7 @@ public class FoodList extends AppCompatActivity {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
                         Intent foodDetail=new Intent(FoodList.this,FoodDetail.class);
-                        foodDetail.putExtra("FoodId",adapter.getRef(position).getKey());
+                        foodDetail.putExtra("foodId",adapter.getRef(position).getKey());
                         startActivity(foodDetail);
                     }
                 });
