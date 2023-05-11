@@ -17,31 +17,42 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rengwuxian.materialedittext.MaterialEditText;
+import com.rey.material.widget.CheckBox;
 
 import dev.krm.androideatit.Common.Common;
 import dev.krm.androideatit.Model.User;
+import io.paperdb.Paper;
 
 public class SignIn extends AppCompatActivity {
 
-    EditText edtPassword,edtPhone;
+    EditText edtPassword, edtPhone;
     Button btnSignIn;
+    CheckBox ckbRemember;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        edtPassword=(MaterialEditText)findViewById(R.id.edtPassword);
-        edtPhone=(MaterialEditText)findViewById(R.id.edtPhone);
-        btnSignIn=(Button)findViewById(R.id.btnSignIn);
+        edtPassword = (MaterialEditText) findViewById(R.id.edtPassword);
+        edtPhone = (MaterialEditText) findViewById(R.id.edtPhone);
+        btnSignIn = (Button) findViewById(R.id.btnSignIn);
+        ckbRemember = (CheckBox) findViewById(R.id.ckbRemember);
 
-        FirebaseDatabase database=FirebaseDatabase.getInstance();
-        final DatabaseReference table_user= database.getReference("User");
+        Paper.init(this);
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference table_user = database.getReference("User");
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Common.isConnectedToInternet(getBaseContext())) {
+                if (Common.isConnectedToInternet(getBaseContext())) {
+
+                    if(ckbRemember.isChecked()){
+                        Paper.book().write(Common.USER_KEY,edtPhone.getText().toString());
+                        Paper.book().write(Common.PWD_KEY,edtPassword.getText().toString());
+                    }
 
                     ProgressDialog mDialog = new ProgressDialog(SignIn.this);
                     mDialog.setMessage("Please waiting...");
@@ -75,7 +86,7 @@ public class SignIn extends AppCompatActivity {
 
                         }
                     });
-                }else{
+                } else {
                     Toast.makeText(SignIn.this, "Please check your connection", Toast.LENGTH_SHORT).show();
                     return;
                 }

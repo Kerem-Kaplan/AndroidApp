@@ -31,6 +31,7 @@ import dev.krm.androideatit.Model.Category;
 import dev.krm.androideatit.Service.ListenOrder;
 import dev.krm.androideatit.ViewHolder.MenuViewHolder;
 import dev.krm.androideatit.databinding.ActivityHomeBinding;
+import io.paperdb.Paper;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -61,6 +62,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         database=FirebaseDatabase.getInstance();
         category=database.getReference("Category");
 
+        Paper.init(this);
+
         binding.appBarHome.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,6 +83,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         binding.appBarHome.fabLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Paper.book().destroy();
                 Intent signIn = new Intent(Home.this, SignIn.class);
                 signIn.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(signIn);
