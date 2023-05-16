@@ -21,7 +21,7 @@ import dev.krm.androideatit.Model.User;
 
 public class SignUp extends AppCompatActivity {
 
-    MaterialEditText edtPhone, edtName, edtPassword;
+    MaterialEditText edtPhone, edtName, edtPassword,edtSecureCode;
     Button btnSignUp;
 
     @Override
@@ -32,6 +32,7 @@ public class SignUp extends AppCompatActivity {
         edtPhone = (MaterialEditText) findViewById(R.id.edtPhone);
         edtName = (MaterialEditText) findViewById(R.id.edtName);
         edtPassword = (MaterialEditText) findViewById(R.id.edtPassword);
+        edtSecureCode = (MaterialEditText) findViewById(R.id.edtSecureCode);
 
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
 
@@ -52,10 +53,12 @@ public class SignUp extends AppCompatActivity {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.child(edtPhone.getText().toString()).exists()) {
                                 mDialog.dismiss();
-                                Toast.makeText(SignUp.this, "Phone Number alredy register", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignUp.this, "Phone Number already register", Toast.LENGTH_SHORT).show();
                             } else {
                                 mDialog.dismiss();
-                                User user = new User(edtName.getText().toString(), edtPassword.getText().toString());
+                                User user = new User(edtName.getText().toString(),
+                                        edtPassword.getText().toString(),
+                                        edtSecureCode.getText().toString());
                                 table_user.child(edtPhone.getText().toString()).setValue(user);
                                 Toast.makeText(SignUp.this, "Sign Up successfully!", Toast.LENGTH_SHORT).show();
                                 finish();
