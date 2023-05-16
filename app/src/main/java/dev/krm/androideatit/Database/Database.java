@@ -14,56 +14,82 @@ import java.util.List;
 import dev.krm.androideatit.Model.Order;
 
 public class Database extends SQLiteAssetHelper {
-    private static final String DB_NAME="AndroidAppDB.db";
-    private static final int DB_VER=1;
+    private static final String DB_NAME = "AndroidAppDB.db";
+    private static final int DB_VER = 1;
 
     public Database(Context context) {
 
-        super(context,DB_NAME,null,DB_VER);
+        super(context, DB_NAME, null, DB_VER);
     }
 
 
     @SuppressLint("Range")
-    public List<Order> getCarts(){
-        SQLiteDatabase db= getReadableDatabase();
-        SQLiteQueryBuilder qb=new SQLiteQueryBuilder();
+    public List<Order> getCarts() {
+        SQLiteDatabase db = getReadableDatabase();
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
-        String[] sqlSelect={"ProductName","ProductId","Quantity","Price","Discount"};
-        String sqlTable="OrderDetail";
+        String[] sqlSelect = {"ProductName", "ProductId", "Quantity", "Price", "Discount"};
+        String sqlTable = "OrderDetail";
 
         qb.setTables(sqlTable);
 
-        Cursor c=qb.query(db,sqlSelect,null,null,null,null,null);
+        Cursor c = qb.query(db, sqlSelect, null, null, null, null, null);
 
-        final List<Order> result=new ArrayList<>();
-        if(c.moveToFirst()){
-            do{
+        final List<Order> result = new ArrayList<>();
+        if (c.moveToFirst()) {
+            do {
                 result.add(new Order(c.getString(c.getColumnIndex("ProductId")),
                         c.getString(c.getColumnIndex("ProductName")),
                         c.getString(c.getColumnIndex("Quantity")),
                         c.getString(c.getColumnIndex("Price")),
                         c.getString(c.getColumnIndex("Discount"))
                 ));
-            }while (c.moveToNext());
+            } while (c.moveToNext());
         }
         return result;
     }
 
-    public void addToCart(Order order){
-        SQLiteDatabase db=getReadableDatabase();
-        String query=String.format("INSERT INTO OrderDetail(ProductId,ProductName,Quantity,Price,Discount) VALUES ('%s','%s','%s','%s','%s')",
+    public void addToCart(Order order) {
+        SQLiteDatabase db = getReadableDatabase();
+        String query = String.format("INSERT INTO OrderDetail(ProductId,ProductName,Quantity,Price,Discount) VALUES ('%s','%s','%s','%s','%s')",
                 order.getProductId(),
                 order.getProductName(),
                 order.getQuantity(),
                 order.getPrice(),
                 order.getDiscount()
-                );
+        );
         db.execSQL(query);
     }
 
-    public void cleanCart(){
-        SQLiteDatabase db=getReadableDatabase();
-        String query=String.format("DELETE FROM OrderDetail");
+    public void cleanCart() {
+        SQLiteDatabase db = getReadableDatabase();
+        String query = String.format("DELETE FROM OrderDetail");
         db.execSQL(query);
+    }
+
+    public void addToFavorites(String foodId) {
+        SQLiteDatabase database = getReadableDatabase();
+        String query = String.format("INSERT INTO Favorites(FoodId) VALUES('%s');", foodId);
+        database.execSQL(query);
+    }
+
+
+    public void removeToFavorites(String foodId) {
+        SQLiteDatabase database = getReadableDatabase();
+        String query = String.format("DELETE FROM Favorites WHERE FoodId='%s';", foodId);
+        database.execSQL(query);
+    }
+
+
+    public boolean isFavorites(String foodId) {
+        SQLiteDatabase database = getReadableDatabase();
+        String query = String.format("SELECT * FROM Favorites WHERE FoodId='%s';", foodId);
+        Cursor cursor = database.rawQuery(query, null);
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
     }
 }

@@ -129,11 +129,11 @@ public class SignIn extends AppCompatActivity {
                 table_user.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        User user=snapshot.child(edtPhone.getText().toString())
+                        User user = snapshot.child(edtPhone.getText().toString())
                                 .getValue(User.class);
-                        if(user.getSecureCode().equals(edtSecureCode.getText().toString())){
-                            Toast.makeText(SignIn.this, "Your Password: "+user.getPassword(), Toast.LENGTH_LONG).show();
-                        }else{
+                        if (user.getSecureCode().equals(edtSecureCode.getText().toString())) {
+                            Toast.makeText(SignIn.this, "Your Password: " + user.getPassword(), Toast.LENGTH_LONG).show();
+                        } else {
                             Toast.makeText(SignIn.this, "Wrong secure code", Toast.LENGTH_SHORT).show();
                         }
                     }
