@@ -8,6 +8,7 @@ import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,26 +19,35 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.stepstone.apprating.AppRatingDialog;
+import com.stepstone.apprating.listener.RatingDialogListener;
+
+import java.util.Arrays;
 
 import dev.krm.androideatit.Common.Common;
 import dev.krm.androideatit.Database.Database;
 import dev.krm.androideatit.Model.Food;
 import dev.krm.androideatit.Model.Order;
+import dev.krm.androideatit.Model.Rating;
 
-public class FoodDetail extends AppCompatActivity {
+public class FoodDetail extends AppCompatActivity implements RatingDialogListener {
 
     TextView food_name, food_price, food_description;
     ImageView food_image;
     CollapsingToolbarLayout collapsingToolbarLayout;
-    FloatingActionButton btnCart;
+    FloatingActionButton btnCart, btnRating;
     ElegantNumberButton numberButton;
+
+    RatingBar ratingBar;
 
     String foodId = "";
 
     FirebaseDatabase database;
-    DatabaseReference foods;
+    DatabaseReference foods, ratingTable;
+
 
     Food currentFood;
 
@@ -49,9 +59,19 @@ public class FoodDetail extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         foods = database.getReference("Foods");
+        ratingTable = database.getReference("Rating");
 
         btnCart = (FloatingActionButton) findViewById(R.id.btnCart);
+        btnRating = (FloatingActionButton) findViewById(R.id.btnRating);
         numberButton = (ElegantNumberButton) findViewById(R.id.number_button);
+        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+
+        btnRating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showRatingDialog();
+            }
+        });
         btnCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,13 +101,58 @@ public class FoodDetail extends AppCompatActivity {
             foodId = getIntent().getStringExtra("foodId");
         }
         if (!foodId.isEmpty()) {
-            if (Common.isConnectedToInternet(getBaseContext()))
+            if (Common.isConnectedToInternet(getBaseContext())) {
                 getDetailFood(foodId);
-            else {
+                getRatingFood();
+            } else {
                 Toast.makeText(FoodDetail.this, "Please check your connection", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
+    }
+
+    private void getRatingFood() {
+        Query foodRating = ratingTable.orderByChild("foodId").equalTo(foodId);
+        foodRating.addValueEventListener(new ValueEventListener() {
+            int count = 0, sum = 0;
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Rating item = dataSnapshot.getValue(Rating.class);
+                    sum += Integer.parseInt(item.getRateValue());
+                    count++;
+                }
+                if (count != 0) {
+                    float average = sum / count;
+                    ratingBar.setRating(average);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void showRatingDialog() {
+        new AppRatingDialog.Builder()
+                .setPositiveButtonText("Submit")
+                .setNegativeButtonText("Cancel")
+                .setNoteDescriptions(Arrays.asList("Very Bad", "Not Good", "Quite Ok", "Very Good", "Excellent"))
+                .setDefaultRating(1)
+                .setTitle("Rate this food")
+                .setDescription("Please select some stars and give your feedback")
+                .setTitleTextColor(R.color.colorPrimary)
+                .setDescriptionTextColor(R.color.colorPrimary)
+                .setHint("Please write your comment here...")
+                .setHintTextColor(com.mancj.materialsearchbar.R.color.colorAccent)
+                .setCommentTextColor(android.R.color.white)
+                .setCommentBackgroundColor(com.mancj.materialsearchbar.R.color.colorPrimaryDark)
+                .setWindowAnimation(R.style.RatingDialogFadeAnim)
+                .create(FoodDetail.this)
+                .show();
     }
 
 
@@ -114,4 +179,49 @@ public class FoodDetail extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onNegativeButtonClicked() {
+
+    }
+
+    @Override
+    public void onPositiveButtonClicked(int i, @NonNull String comments) {
+        Rating rating = new Rating(Common.currentUser.getPhone(),
+                foodId,
+                String.valueOf(i),
+                comments);
+        ratingTable.child(Common.currentUser.getPhone()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.child(Common.currentUser.getPhone()).exists()) {
+                    ratingTable.child(Common.currentUser.getPhone()).removeValue();
+                    ratingTable.child(Common.currentUser.getPhone()).setValue(rating);
+
+                } else {
+                    ratingTable.child(Common.currentUser.getPhone()).setValue(rating);
+                }
+                Toast.makeText(FoodDetail.this, "Thank you for submit rating !!!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+

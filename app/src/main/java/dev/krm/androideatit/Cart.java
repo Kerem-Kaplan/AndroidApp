@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -50,21 +52,21 @@ public class Cart extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
-        database=FirebaseDatabase.getInstance();
-        requests=database.getReference("Requests");
+        database = FirebaseDatabase.getInstance();
+        requests = database.getReference("Requests");
 
-        recyclerView=(RecyclerView) findViewById(R.id.listCart);
+        recyclerView = (RecyclerView) findViewById(R.id.listCart);
         recyclerView.setHasFixedSize(true);
-        layoutManager=new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        txtTotalPrice=(TextView) findViewById(R.id.total);
-        btnPlace=(Button) findViewById(R.id.btnPlaceOrder);
+        txtTotalPrice = (TextView) findViewById(R.id.total);
+        btnPlace = (Button) findViewById(R.id.btnPlaceOrder);
 
         btnPlace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(cart.size()>0)
+                if (cart.size() > 0)
                     showAlertDialog();
                 else
                     Toast.makeText(Cart.this, "Your cart is empty !!!", Toast.LENGTH_SHORT).show();
@@ -74,29 +76,30 @@ public class Cart extends AppCompatActivity {
         loadListFood();
     }
 
-    private void showAlertDialog(){
-        AlertDialog.Builder alertDialog=new AlertDialog.Builder(Cart.this);
+    private void showAlertDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Cart.this);
         alertDialog.setTitle("One more step!");
         alertDialog.setMessage("Enter your address");
 
-        final EditText edtAddress=new EditText(Cart.this);
-        LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-        );
+        LayoutInflater inflater = this.getLayoutInflater();
+        View orderAddressComment = inflater.inflate(R.layout.order_address_comment, null);
 
-        edtAddress.setLayoutParams(lp);
-        alertDialog.setView(edtAddress);
+        MaterialEditText edtAddress = (MaterialEditText) orderAddressComment.findViewById(R.id.edtAddress);
+        MaterialEditText edtComment = (MaterialEditText) orderAddressComment.findViewById(R.id.edtComment);
+
+        alertDialog.setView(orderAddressComment);
         alertDialog.setIcon(R.drawable.baseline_shopping_cart_24);
 
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Request request=new Request(
+                Request request = new Request(
                         Common.currentUser.getPhone(),
                         Common.currentUser.getName(),
                         edtAddress.getText().toString(),
                         txtTotalPrice.getText().toString(),
+                        "0",
+                        edtComment.getText().toString(),
                         cart
                 );
 
@@ -119,25 +122,25 @@ public class Cart extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private void loadListFood(){
-        cart=new Database(this).getCarts();
-        adapter=new CartAdapter(cart,this);
+    private void loadListFood() {
+        cart = new Database(this).getCarts();
+        adapter = new CartAdapter(cart, this);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
 
-        int total=0;
-        for(Order order:cart)
-            total+=(Integer.parseInt(order.getPrice()))*(Integer.parseInt(order.getQuantity()));
+        int total = 0;
+        for (Order order : cart)
+            total += (Integer.parseInt(order.getPrice())) * (Integer.parseInt(order.getQuantity()));
 
-        Locale locale=new Locale("en","US");
-        NumberFormat fmt=NumberFormat.getCurrencyInstance(locale);
+        Locale locale = new Locale("en", "US");
+        NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
 
         txtTotalPrice.setText(fmt.format(total));
     }
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        if(item.getTitle().equals(Common.DELETE))
+        if (item.getTitle().equals(Common.DELETE))
             deleteCart(item.getOrder());
 
         return true;
@@ -146,7 +149,7 @@ public class Cart extends AppCompatActivity {
     private void deleteCart(int position) {
         cart.remove(position);
         new Database(this).cleanCart();
-        for (Order item:cart)
+        for (Order item : cart)
             new Database(this).addToCart(item);
         loadListFood();
     }
