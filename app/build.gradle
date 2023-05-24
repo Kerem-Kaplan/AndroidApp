@@ -43,6 +43,7 @@ dependencies {
         }
     }
 
+    implementation 'com.github.d-max:spots-dialog:0.7@aar'
     implementation 'com.github.dinukapj:MaterialSearchBar:0.7.1'
     implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
     implementation 'androidx.appcompat:appcompat:1.6.1'

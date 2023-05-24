@@ -77,5 +77,16 @@
         android:contentDescription="@null"
         app:srcCompat="@drawable/baseline_refresh_24" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/changePassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="336dp"
+        android:backgroundTint="@android:color/white"
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/baseline_security_24" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
