@@ -43,6 +43,7 @@ dependencies {
         }
     }
 
+    implementation 'com.paypal.sdk:paypal-android-sdk:2.15.3'
     implementation 'com.github.d-max:spots-dialog:0.7@aar'
     implementation 'com.github.dinukapj:MaterialSearchBar:0.7.1'
     implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
