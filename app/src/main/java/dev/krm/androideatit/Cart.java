@@ -48,7 +48,7 @@ import dev.krm.androideatit.ViewHolder.CartAdapter;
 
 public class Cart extends AppCompatActivity {
 
-    private static final int PAYPAL_REQUEST_CODE = 9999;
+    private static final int PAYPAL_REQUEST_CODE = 123;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
 

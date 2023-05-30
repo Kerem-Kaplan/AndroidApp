@@ -29,6 +29,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 import java.util.HashMap;
@@ -59,6 +60,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
 
+    SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +71,36 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         binding.appBarHome.toolbar.setTitle("Menu");
         setSupportActionBar(binding.appBarHome.toolbar);
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (Common.isConnectedToInternet(getBaseContext()))
+                    loadMenu();
+                else {
+                    Toast.makeText(getBaseContext(), "Please check your connection", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        });
+
+       swipeRefreshLayout.post(new Runnable() {
+           @Override
+           public void run() {
+               if (Common.isConnectedToInternet(getBaseContext()))
+                   loadMenu();
+               else {
+                   Toast.makeText(getBaseContext(), "Please check your connection", Toast.LENGTH_SHORT).show();
+                   return;
+               }
+           }
+       });
 
         database = FirebaseDatabase.getInstance();
         category = database.getReference("Category");
@@ -136,12 +169,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         layoutManager = new LinearLayoutManager(this);
         recycler_menu.setLayoutManager(layoutManager);
 
-        if (Common.isConnectedToInternet(this))
-            loadMenu();
-        else {
-            Toast.makeText(this, "Please check your connection", Toast.LENGTH_SHORT).show();
-            return;
-        }
+
 
         Intent service = new Intent(Home.this, ListenOrder.class);
         startService(service);
@@ -234,6 +262,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         };
 
         recycler_menu.setAdapter(adapter);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -255,14 +284,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int id=item.getItemId();
+        int id = item.getItemId();
 
-       if(id==R.id.nav_menu){
+        if (id == R.id.nav_menu) {
 
-       }else if(id==R.id.nav_cart){
-           Intent cartIntent=new Intent(Home.this,Cart.class);
-           startActivity(cartIntent);
-       }
+        } else if (id == R.id.nav_cart) {
+            Intent cartIntent = new Intent(Home.this, Cart.class);
+            startActivity(cartIntent);
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
